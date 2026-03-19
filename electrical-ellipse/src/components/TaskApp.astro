@@ -1,0 +1,121 @@
+---
+
+---
+
+<div>
+  <input id="taskInput" placeholder="Nueva tarea..." />
+  <button onclick="addTask()">Agregar</button>
+
+  <ul id="taskList"></ul>
+</div>
+
+<script is:inline>
+  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  function render() {
+  const list = document.getElementById("taskList");
+  list.innerHTML = "";
+
+  tasks.forEach((task, i) => {
+    const li = document.createElement("li");
+
+    const span = document.createElement("span");
+    span.textContent = task;
+
+    const btn = document.createElement("button");
+    btn.textContent = "❌";
+    btn.style.background = "transparent";
+    btn.style.border = "none";
+    btn.style.cursor = "pointer";
+
+    btn.onclick = (e) => {
+      e.stopPropagation(); // evita borrar al tocar toda la card
+      tasks.splice(i, 1);
+      save();
+    };
+
+    li.appendChild(span);
+    li.appendChild(btn);
+
+    // animación
+    li.style.opacity = 0;
+    li.style.transform = "translateY(10px)";
+    setTimeout(() => {
+      li.style.opacity = 1;
+      li.style.transform = "translateY(0)";
+    }, 50);
+
+    list.appendChild(li);
+  });
+}
+
+
+
+  function addTask() {
+    const input = document.getElementById("taskInput");
+    if (input.value.trim() === "") return;
+
+    tasks.push(input.value);
+    input.value = "";
+    save();
+  }
+
+  function save() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    render();
+  }
+
+  render();
+</script>
+<style>
+  input {
+    padding: 10px;
+    width: 70%;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: #667eea;
+    color: white;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+  }
+
+  li {
+  background: white;
+  margin-top: 12px;
+  padding: 15px;
+  border-radius: 15px;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+
+  transition: all 0.2s ease;
+}
+
+li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+#taskInput {
+  outline: none;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+  
+</style>

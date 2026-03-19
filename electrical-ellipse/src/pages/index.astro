@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TaskApp from '../components/TaskApp.astro';
+---
+<button onclick="toggleDark()" style="position: fixed; top: 20px; right: 20px;">
+  🌙
+</button>
+
+<script is:inline>
+  function toggleDark() {
+    document.body.classList.toggle("dark");
+  }
+</script>
+<Layout>
+  <h1>Mi App de Tareas</h1>
+
+  <section>
+    <h2>📌 Sobre la app</h2>
+    <p>Esta es una app para organizar tareas.</p>
+  </section>
+
+  <section>
+    <h2>📝 Tareas</h2>
+    <TaskApp />
+  </section>
+
+  <section>
+    <h2>ℹ️ Info</h2>
+    <p>Proyecto hecho con Astro.</p>
+  </section>
+</Layout>
