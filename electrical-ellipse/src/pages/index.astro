@@ -12,20 +12,26 @@ import TaskApp from '../components/TaskApp.astro';
   }
 </script>
 <Layout>
-  <h1>Mi App de Tareas</h1>
+  <div class="app">
+    
+    <!-- IZQUIERDA -->
+    <div class="sidebar">
+      <h1>Mi App</h1>
+      <p>Organizá tus tareas fácil 🚀</p>
+    </div>
 
-  <section>
-    <h2>📌 Sobre la app</h2>
-    <p>Esta es una app para organizar tareas.</p>
-  </section>
+    <!-- DERECHA -->
+    <div class="content">
+      <section>
+        <h2>📝 Tareas</h2>
+        <TaskApp />
+      </section>
 
-  <section>
-    <h2>📝 Tareas</h2>
-    <TaskApp />
-  </section>
+      <section>
+        <h2>ℹ️ Info</h2>
+        <p>Proyecto hecho con Astro.</p>
+      </section>
+    </div>
 
-  <section>
-    <h2>ℹ️ Info</h2>
-    <p>Proyecto hecho con Astro.</p>
-  </section>
+  </div>
 </Layout>
