@@ -4,6 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro Basics</title>
@@ -17,19 +18,15 @@
 
 <style>
  body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(40deg, #ffb4f4ff, #f26bdeff);
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(40deg, #e4e2cb, #a3e4e7);
   margin: 0;
   min-height: 100vh;
-
-  display: flex;
-  justify-content: center; /* ✔ */
-  align-items: center;     /* ✔ */
 }
 
 .app {
   display: flex;
-  gap: 30px;
+  flex-direction: column; 
 }
 
 .sidebar {
@@ -41,18 +38,44 @@
 }
 
 .content {
-  flex: 1;
+  width: 100%;
 }
 
 main {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
+ 
   width: 100%;
-  max-width: 900px; /* 🔥 clave */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
+body.dark {
+  background: linear-gradient(40deg,  #918e74, #4c6e6f);
+  color: white;
+}
+
+body.dark main {
+  background:  #918e74, #4c6e6f;
+}
+
+body.dark .column {
+  background: #918e74, #4c6e6f;
+}
+
+body.dark .task {
+  background: #ff0048;
+  color: white;
+  border: 1px solid #ffffff;
+}
+
+body.dark input {
+  background: #2a2a2a;
+  color: white;
+}
+
+body.dark button {
+  background: #444;
+}
 @media (max-width: 700px) {
   .app {
     flex-direction: column;
@@ -62,3 +85,6 @@ main {
     width: 100%;
   }
 }
+
+
+

@@ -1,62 +1,102 @@
----
-
----
-
-<div>
+<div class="add">
   <input id="taskInput" placeholder="Nueva tarea..." />
   <button onclick="addTask()">Agregar</button>
-
-  <ul id="taskList"></ul>
 </div>
+<div class="board">
+  <div class="column" ondrop="drop(event, 'todo')" ondragover="allowDrop(event)">
+   <h3>📝 To Do (<span id="count-todo">0</span>)</h3>
+    <div id="todo"></div>
+  </div>
+
+  <div class="column" ondrop="drop(event, 'progress')" ondragover="allowDrop(event)">
+  <h3>⚙️ In Progress (<span id="count-progress">0</span>)</h3>
+    <div id="progress"></div>
+  </div>
+
+  <div class="column" ondrop="drop(event, 'done')" ondragover="allowDrop(event)">
+<h3>✅ Done (<span id="count-done">0</span>)</h3>
+    <div id="done"></div>
+  </div>
+</div>
+
+
 
 <script is:inline>
   let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-  function render() {
-  const list = document.getElementById("taskList");
-  list.innerHTML = "";
+
+
+ function render() {
+  document.getElementById("todo").innerHTML = "";
+  document.getElementById("progress").innerHTML = "";
+  document.getElementById("done").innerHTML = "";
+
+let countTodo = 0;
+let countProgress = 0;
+let countDone = 0;
 
   tasks.forEach((task, i) => {
-    const li = document.createElement("li");
+  if (task.status === "todo") countTodo++;
+  if (task.status === "progress") countProgress++;
+  if (task.status === "done") countDone++;
+    if (typeof task === "string") {
+      task = { text: task, status: "todo" };
+      tasks[i] = task;
+    }
+
+    const div = document.createElement("div");
+    div.className = "task";
+    div.draggable = true;
+
+    div.ondragstart = (e) => {
+      e.dataTransfer.setData("index", i);
+    };
 
     const span = document.createElement("span");
-    span.textContent = task;
+    span.textContent = task.text;
 
     const btn = document.createElement("button");
-    btn.textContent = "Borrar";
-    btn.style.background = "transparent";
-    btn.style.border = "none";
-    btn.style.cursor = "pointer";
+
+if (task.status === "done") {
+  btn.textContent = "✔️ Terminado";
+} else {
+  btn.textContent = "borrar";
+}
 
     btn.onclick = (e) => {
-      e.stopPropagation(); // evita borrar al tocar toda la card
+      e.stopPropagation();
       tasks.splice(i, 1);
       save();
     };
 
-    li.appendChild(span);
-    li.appendChild(btn);
+    div.appendChild(span);
+    div.appendChild(btn);
 
-    // animación
-    li.style.opacity = 0;
-    li.style.transform = "translateY(10px)";
-    setTimeout(() => {
-      li.style.opacity = 1;
-      li.style.transform = "translateY(0)";
-    }, 50);
+    document.getElementById(task.status).appendChild(div);
 
-    list.appendChild(li);
+  document.getElementById("count-todo").textContent = countTodo;
+document.getElementById("count-progress").textContent = countProgress;
+document.getElementById("count-done").textContent = countDone;
   });
 }
-
-
 
   function addTask() {
     const input = document.getElementById("taskInput");
     if (input.value.trim() === "") return;
 
-    tasks.push(input.value);
+    tasks.push({ text: input.value, status: "todo" });
     input.value = "";
+    save();
+  }
+
+  function allowDrop(e) {
+    e.preventDefault();
+  }
+
+  function drop(e, status) {
+    e.preventDefault();
+    const index = e.dataTransfer.getData("index");
+    tasks[index].status = status;
     save();
   }
 
@@ -67,65 +107,121 @@
 
   render();
 </script>
+
 <style>
-  input {
-    padding: 10px;
-    width: 70%;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-  }
+.board {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  height: calc(100vh - 220px);
+}
 
-  button {
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    background: #ea66e6ff;
-    color: white;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 15px;
-  }
-
-:global(li) {
-  background: #8f1450ff; /* gris clarito */
-  margin-top: 12px;
+.column {
+  flex: 1;
+  background: #ffffffaa;
   padding: 15px;
   border-radius: 15px;
-  cursor: pointer;
+  min-height: 100%;
+  overflow-y: auto; 
+}
+
+.column h3 {
+  text-align: center;
+}
+
+:global(.task) {
+  width: 100%; 
+  box-sizing: border-box;
+
+  background: white;
+  color: black;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 10px;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  border: 1px solid #e0e0e0; 
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  cursor: grab;
 
-  transition: all 0.2s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border: 1px solid #e5e5e5;
+
+  transition: 0.2s;
 }
 
-li:hover {
+:global(.task) {
+  flex: 1;
+  font-size: 14px;
+}
+
+.task:active {
+  cursor: grabbing;
+  transform: scale(1.03);
+}
+
+.task:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-#taskInput {
+:global(.task button) {
+  margin-left: 10px;
+  background: #ffe5e5;
+  border-radius: 6px;
+  padding: 3px 6px;
+}
+
+.task button:hover {
+  color: red;
+}
+
+.add {
+  display: flex;
+  justify-content: center; /* 🔥 centra todo */
+  align-items: center;
+  gap: 10px;
+
+  margin: 30px 0; /* 🔥 separa arriba y abajo */
+}
+
+.add input {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
   outline: none;
+
+  font-size: 14px;
+
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+input {
+  padding: 10px;
+  width: 70%;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.add button {
+  padding: 14px 20px;
+  border-radius: 12px;
+  border: none;
+
+  background: linear-gradient(135deg, #f8ffad, #4e85f3);
+  color: white;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add button:hover {
+  transform: scale(1.05);
 }
 
 button:hover {
   opacity: 0.8;
 }
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px; 
-}
-  
 </style>

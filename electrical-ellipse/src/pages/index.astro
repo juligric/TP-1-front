@@ -15,23 +15,40 @@ import TaskApp from '../components/TaskApp.astro';
   <div class="app">
     
     <!-- IZQUIERDA -->
-    <div class="sidebar">
-      <h1>Mi App</h1>
-      <p>Organizá tus tareas fácil 🚀</p>
-    </div>
+    <div class="header">
+  <h1>Mi App</h1>
+  <p class="subtitle">Organizá tus tareas de forma simple y visual </p>
+</div>
 
     <!-- DERECHA -->
     <div class="content">
       <section>
-        <h2>📝 Tareas</h2>
+       
         <TaskApp />
       </section>
 
       <section>
-        <h2>ℹ️ Info</h2>
-        <p>Proyecto hecho con Astro.</p>
+        
       </section>
     </div>
 
   </div>
+
+  <style> 
+  .header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.subtitle {
+  margin-top: 5px;
+  color: #555;
+  font-weight: 300;
+}
+</style>
 </Layout>
