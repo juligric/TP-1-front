@@ -151,9 +151,19 @@ document.getElementById("count-done").textContent = countDone;
   transition: 0.2s;
 }
 
+
+
+.column {
+  transition: background 0.2s;
+}
+
+.column.drag-over {
+  background: rgba(0,0,0,0.05);
+}
 :global(.task) {
   flex: 1;
   font-size: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .task:active {
